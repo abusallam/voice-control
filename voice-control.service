@@ -1,5 +1,5 @@
 [Unit]
-Description=Nerd Dictation Service
+Description=Voice Control Service
 After=network.target
 
 [Service]

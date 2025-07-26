@@ -30,7 +30,7 @@ You can test various devices by
    sox test.wav -d
 
 
-Running nerd dictation with ``sox``
+Running voice control with ``sox``
 ===================================
 
 To run ``voice-control`` with ``sox``, use the ``--input`` argument.

@@ -46,7 +46,7 @@ PUNCTUATION = {
 language = "en-US"
 
 
-def nerd_dictation_process(text):
+def voice_control_process(text):
     print("\n\n<<<< " + text)
 
     # Fix up punctuation first because the grammar parser works better:

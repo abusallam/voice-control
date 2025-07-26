@@ -13,30 +13,25 @@ import sys
 import os
 from pathlib import Path
 
+# Temporarily disabled new implementation for testing original commands
 # Try to use the new stable implementation first
-try:
-    # Add voice_control module to path - check both local and installed locations
-    possible_paths = [
-        Path(__file__).parent,  # Local development
-        Path.home() / ".local/share/voice-control",  # Installed location
-    ]
-    
-    for base_path in possible_paths:
-        voice_control_dir = base_path / "voice_control"
+if False:  # Disabled for testing
+    try:
+        # Add voice_control module to path
+        voice_control_dir = Path(__file__).parent / "voice_control"
         if voice_control_dir.exists():
-            sys.path.insert(0, str(base_path))
+            sys.path.insert(0, str(Path(__file__).parent))
             from voice_control.main import main as stable_main
             
             # Use the new stable implementation
             if __name__ == "__main__":
                 sys.exit(stable_main())
-            break
-    else:
-        # Fall back to original implementation if voice_control not found
+        else:
+            # Fall back to original implementation
+            pass
+    except ImportError:
+        # Fall back to original implementation if new one isn't available
         pass
-except ImportError:
-    # Fall back to original implementation if new one isn't available
-    pass
 
 # All built in modules.
 import argparse

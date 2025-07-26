@@ -83,7 +83,7 @@ NOSPACE_WORDS = {
 }
 
 
-def nerd_dictation_process(text):
+def voice_control_process(text):
     print(">> " + text)
 
     text = re.sub(r"^\s+|\s+$", "", text)

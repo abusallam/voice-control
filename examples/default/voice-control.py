@@ -55,7 +55,7 @@ OPENING_PUNCTUATION = {
 # -----------------------------------------------------------------------------
 # Main Processing Function
 
-def nerd_dictation_process(text):
+def voice_control_process(text):
 
     for match, replacement in TEXT_REPLACE_REGEX:
         text = match.sub(replacement, text)

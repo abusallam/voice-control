@@ -1,125 +1,39 @@
-#!/usr/bin/env python3
+#!/bin/bash
+# Voice Control UI Launcher
+# Launches the system tray application for easy voice control access.
 
-import tkinter as tk
-from tkinter import ttk
+# Set up Python path to include the voice control modules
+INSTALL_DIR="$HOME/.local/share/voice-control"
+export PYTHONPATH="$INSTALL_DIR:$PYTHONPATH"
 
-class App(tk.Tk):
-    def update_status(self):
-        try:
-            with open("/tmp/voice-control-status", "r") as f:
-                status = f.read()
-                self.status_bar.config(text=status)
-        except FileNotFoundError:
-            self.status_bar.config(text="Idle")
-        self.after(1000, self.update_status)
+# Use system Python to avoid virtual environment issues
+PYTHON_CMD="/usr/bin/python3"
 
-    def record_hotkey(self):
-        self.hotkey_window = tk.Toplevel(self)
-        self.hotkey_window.title("Record Hotkey")
-        self.hotkey_window.geometry("200x100")
+# Check if system Python is available
+if [ ! -x "$PYTHON_CMD" ]; then
+    PYTHON_CMD="python3"
+fi
 
-        label = ttk.Label(self.hotkey_window, text="Press a key combination.")
-        label.pack()
+# Change to the application directory
+cd "$INSTALL_DIR" 2>/dev/null || {
+    echo "Error: Voice Control not properly installed"
+    echo "Please run: ./install.sh"
+    exit 1
+}
 
-        self.hotkey_window.bind("<KeyPress>", self.on_key_press)
-
-    def on_key_press(self, event):
-        hotkey = f"<{'ctrl' if event.state & 4 else ''}{'alt' if event.state & 8 else ''}{'shift' if event.state & 1 else ''}>+{event.keysym}"
-        self.hotkey_var.set(hotkey)
-        self.hotkey_display.config(text=hotkey)
-        self.hotkey_window.destroy()
-
-    def __init__(self):
-        super().__init__()
-
-        self.title("Nerd Dictation Settings")
-        self.geometry("500x400")
-
-        self.create_widgets()
-
-    def create_widgets(self):
-        # Model selection
-        model_label = ttk.Label(self, text="Speech Recognition Model:")
-        model_label.pack()
-
-        self.model_var = tk.StringVar()
-        model_combobox = ttk.Combobox(self, textvariable=self.model_var)
-        model_combobox['values'] = ('Whisper', 'CMU Sphinx')
-        model_combobox.pack()
-
-        # Hotkey selection
-        hotkey_label = ttk.Label(self, text="Hotkey:")
-        hotkey_label.pack()
-
-        self.hotkey_var = tk.StringVar()
-        hotkey_frame = ttk.Frame(self)
-        hotkey_frame.pack()
-
-        self.hotkey_label = ttk.Label(hotkey_frame, text="Current Hotkey:")
-        self.hotkey_label.pack(side=tk.LEFT)
-
-        self.hotkey_display = ttk.Label(hotkey_frame, text=self.hotkey_var.get())
-        self.hotkey_display.pack(side=tk.LEFT)
-
-        record_hotkey_button = ttk.Button(hotkey_frame, text="Record New Hotkey", command=self.record_hotkey)
-        record_hotkey_button.pack(side=tk.LEFT)
-
-        # Auto punctuation
-        self.auto_punctuation_var = tk.BooleanVar()
-        auto_punctuation_checkbutton = ttk.Checkbutton(
-            self,
-            text="Enable automatic punctuation",
-            variable=self.auto_punctuation_var
-        )
-        auto_punctuation_checkbutton.pack()
-
-        # Save button
-        save_button = ttk.Button(self, text="Save", command=self.save_settings)
-        save_button.pack()
-
-        self.status_bar = ttk.Label(self, text="Idle", relief=tk.SUNKEN, anchor=tk.W)
-        self.status_bar.pack(side=tk.BOTTOM, fill=tk.X)
-
-    def save_settings(self):
-        import configparser
-        import os
-
-        config = configparser.ConfigParser()
-        config['settings'] = {
-            'model': self.model_var.get(),
-            'hotkey': self.hotkey_var.get(),
-            'auto_punctuation': self.auto_punctuation_var.get()
-        }
-
-        config_dir = os.path.expanduser("~/.config/voice-control")
-        if not os.path.exists(config_dir):
-            os.makedirs(config_dir)
-
-        with open(os.path.join(config_dir, 'settings.ini'), 'w') as configfile:
-            config.write(configfile)
-
-    def load_settings(self):
-        import configparser
-        import os
-
-        config = configparser.ConfigParser()
-        config_path = os.path.expanduser("~/.config/voice-control/settings.ini")
-        if os.path.exists(config_path):
-            config.read(config_path)
-            self.model_var.set(config.get('settings', 'model', fallback='Whisper'))
-            self.hotkey_var.set(config.get('settings', 'hotkey', fallback='<ctrl>+<alt>+d'))
-            self.auto_punctuation_var.set(config.getboolean('settings', 'auto_punctuation', fallback=False))
-
-    def __init__(self):
-        super().__init__()
-
-        self.title("Nerd Dictation Settings")
-        self.geometry("400x300")
-
-        self.create_widgets()
-        self.load_settings()
-        self.update_status()
-
-if __name__ == "__main__":
-    app = App()
-    app.mainloop()
+# Run the system tray application
+exec $PYTHON_CMD -c "
+import sys
+sys.path.insert(0, '$INSTALL_DIR')
+try:
+    from voice_control.gui.system_tray import main
+    sys.exit(main())
+except ImportError as e:
+    print(f'Error: Failed to import system tray application: {e}')
+    print('Please ensure PyQt5 is installed: sudo apt install python3-pyqt5')
+    print('If the issue persists, try reinstalling: ./install.sh')
+    sys.exit(1)
+except Exception as e:
+    print(f'Error: Failed to start voice control UI: {e}')
+    sys.exit(1)
+"

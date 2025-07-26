@@ -1,3 +1,24 @@
-git+https://github.com/openai/whisper.git
-pynput
-pocketsphinx
+# Core dependencies for voice control application
+psutil>=5.8.0          # System and process utilities for resource monitoring
+numpy>=1.21.0          # Numerical computing for audio processing
+
+# Audio processing dependencies
+pyaudio>=0.2.11        # Audio I/O library for microphone access
+soundfile>=0.12.0      # Audio file I/O
+
+# Speech recognition dependencies
+SpeechRecognition>=3.10.0  # Main speech recognition library
+openai-whisper>=20231117   # Whisper speech recognition backend (proven to work)
+
+# GUI dependencies (tkinter is included with Python)
+Pillow>=8.3.0         # Image processing for GUI icons
+
+# System integration dependencies
+python-xlib>=0.31     # X11 integration for Linux desktop environments
+pynput>=1.7.0         # Input simulation and monitoring for typing output
+
+# Development and testing dependencies (optional)
+pytest>=7.0.0         # Testing framework
+pytest-cov>=4.0.0     # Coverage testing
+black>=22.0.0         # Code formatting
+flake8>=5.0.0         # Code linting

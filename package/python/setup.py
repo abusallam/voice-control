@@ -19,14 +19,14 @@ def main(base_dir):
         root_dir = base_dir
     CWD = os.getcwd()
 
-    NERD_DICTATION_DST = os.path.join(base_dir, "voice-control")
+    VOICE_CONTROL_DST = os.path.join(base_dir, "voice-control")
     README_DST = os.path.join(base_dir, "doc", "readme.rst")
     os.makedirs(os.path.join(base_dir, "doc"), exist_ok=True)
 
     # Path pairs to copy.
     COPY_PATH_PAIRS = (
         # As this is a single, self contained script, this is all that's needed.
-        (os.path.join(root_dir, "voice-control"), NERD_DICTATION_DST),
+        (os.path.join(root_dir, "voice-control"), VOICE_CONTROL_DST),
         (os.path.join(root_dir, "readme.rst"), README_DST),
     )
 
@@ -35,7 +35,7 @@ def main(base_dir):
             shutil.copy2(src, dst)
 
     # `setuptools` expects relative paths.
-    NERD_DICTATION_DST = os.path.relpath(NERD_DICTATION_DST, CWD)
+    VOICE_CONTROL_DST = os.path.relpath(VOICE_CONTROL_DST, CWD)
     README_DST = os.path.relpath(README_DST, CWD)
 
     setuptools.setup(
@@ -54,10 +54,10 @@ def main(base_dir):
             "Operating System :: POSIX :: Linux",
             "License :: OSI Approved :: GPL v3.0",
         ],
-        scripts=[NERD_DICTATION_DST],
-        data_files=[("voice-control", [NERD_DICTATION_DST, README_DST])],
+        scripts=[VOICE_CONTROL_DST],
+        data_files=[("voice-control", [VOICE_CONTROL_DST, README_DST])],
         packages=[""],
-        package_data={"": [NERD_DICTATION_DST, README_DST]},
+        package_data={"": [VOICE_CONTROL_DST, README_DST]},
         include_package_data=True,
         install_requires=["SpeechRecognition"],
         python_requires=">=3.8",

@@ -79,7 +79,7 @@ To avoid running it every time you start the computer, you can add it to your st
 The steps depend on your distribution, so we'll let you look this up.
 
 
-Running nerd dictation with ``ydotool``
+Running voice control with ``ydotool``
 =======================================
 
 To run ``voice-control`` with ``ydotool``, use the ``--simulate-input-tool`` argument.

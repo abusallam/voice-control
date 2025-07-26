@@ -33,7 +33,7 @@ def match_words_at_index(haystack_words, haystack_index, needle_words):
 # -----------------------------------------------------------------------------
 # Main Processing Function
 
-def nerd_dictation_process(text):
+def voice_control_process(text):
     global is_active
 
     words_input = tuple(text.split(" "))

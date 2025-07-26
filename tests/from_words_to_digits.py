@@ -86,7 +86,7 @@ import unittest
 class NumberMixIn:
     def assertNumberFromTextEqual(self, words_input: str, expected_output: str) -> None:
         words = words_input.split()
-        nerd_dictation.from_words_to_digits.parse_numbers_in_word_list(
+        voice_control.from_words_to_digits.parse_numbers_in_word_list(
             words,
             numbers_use_separator=True,
         )
@@ -229,8 +229,8 @@ class TestNumberWholeAutoDelimit(unittest.TestCase, NumberMixIn):
 
 
 if __name__ == "__main__":
-    nerd_dictation = execfile_as_module(
-        "nerd_dictation",
+    voice_control = execfile_as_module(
+        "voice_control",
         os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "voice-control"),
     )
 
