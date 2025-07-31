@@ -5,17 +5,22 @@ numpy>=1.21.0          # Numerical computing for audio processing
 # Audio processing dependencies
 pyaudio>=0.2.11        # Audio I/O library for microphone access
 soundfile>=0.12.0      # Audio file I/O
+sounddevice>=0.5.0     # Audio device interface
 
 # Speech recognition dependencies
 SpeechRecognition>=3.10.0  # Main speech recognition library
 openai-whisper>=20231117   # Whisper speech recognition backend (proven to work)
 
-# GUI dependencies (tkinter is included with Python)
+# GUI dependencies for GNOME/Wayland
 Pillow>=8.3.0         # Image processing for GUI icons
+PyGObject>=3.42.0     # GNOME/GTK integration for system tray
+pycairo>=1.20.0       # Cairo graphics for GUI
 
-# System integration dependencies
-python-xlib>=0.31     # X11 integration for Linux desktop environments
-pynput>=1.7.0         # Input simulation and monitoring for typing output
+# System integration dependencies for Debian 12 GNOME/Wayland
+python-xlib>=0.31     # X11 integration (fallback for X11 apps)
+pynput>=1.7.0         # Input simulation and monitoring
+evdev>=1.6.0          # Direct input device access for Wayland
+python-uinput>=0.11.2 # User input simulation for Wayland
 
 # Development and testing dependencies (optional)
 pytest>=7.0.0         # Testing framework

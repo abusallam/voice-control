@@ -1,268 +1,280 @@
-# 🎤 Voice Control for Linux
+# 🎤 VoiceWhisper - Voice Control for Linux
 
-A reliable, privacy-focused voice control application for Linux desktop environments.
+**A production-ready voice-to-text system for Debian 12 GNOME/Wayland**
+
+Transform your voice into text instantly with AI-powered speech recognition. Perfect for dictation, note-taking, and hands-free computing.
+
+![VoiceWhisper Demo](https://img.shields.io/badge/Platform-Debian%2012%20GNOME-blue)
+![Python](https://img.shields.io/badge/Python-3.8%2B-green)
+![License](https://img.shields.io/badge/License-GPL--2.0-red)
 
 ## ✨ Features
 
-- 🔒 **100% Local Processing** - Your voice never leaves your computer
-- 🖥️ **Cross-Distribution Support** - Works on Ubuntu, Debian, Fedora, Arch Linux, and more
-- 🎯 **System Tray Integration** - Always accessible, never intrusive
-- ⚡ **Real-Time Processing** - Instant voice command recognition
-- 🛡️ **Stable & Crash-Resistant** - Comprehensive error handling and recovery
-- 🔧 **User-Space Installation** - No root privileges required
-- 🎨 **Desktop Environment Agnostic** - Works with GNOME, KDE, XFCE, and others
-- 📱 **Wayland & X11 Compatible** - Supports both modern and traditional display servers
+- 🎙️ **Instant Voice Recognition** - Powered by OpenAI Whisper
+- 🖥️ **System Tray Integration** - Easy access from your desktop
+- ⌨️ **Automatic Typing** - Text appears where your cursor is
+- 🎧 **Continuous Listening** - Stream your voice to text in real-time
+- 🛡️ **Production-Ready** - Comprehensive error handling and recovery
+- 🔒 **Privacy-First** - All processing happens locally, no cloud services
+- 🌍 **Multi-Language** - Auto-detects language or specify your preference
+- ⚡ **Wayland Native** - Optimized for modern Linux desktops
 
 ## 🚀 Quick Start
 
-### Prerequisites
+### One-Command Installation
 
-- **Linux Distribution**: Ubuntu 20.04+, Debian 11+, Fedora 35+, Arch Linux, or similar
+```bash
+git clone https://github.com/your-username/voice-control.git
+cd voice-control
+./install.sh
+```
+
+### Launch System Tray
+
+```bash
+./voice_control_tray.py
+```
+
+### Set Keyboard Shortcut
+
+1. **Settings** → **Keyboard** → **Keyboard Shortcuts** → **Custom Shortcuts**
+2. Add shortcut:
+   - **Name**: Quick Voice Record
+   - **Command**: `/home/$USER/.local/bin/voice-quick-record`
+   - **Shortcut**: `Ctrl+Alt+V`
+
+## 🎯 How It Works
+
+1. **Press `Ctrl+Alt+V`** (or click tray icon)
+2. **Speak clearly** for 5 seconds
+3. **Watch your words appear** where your cursor is!
+
+## 📋 System Requirements
+
+- **OS**: Debian 12 (Bookworm) with GNOME
+- **Display**: Wayland or X11 support
+- **Audio**: PulseAudio or PipeWire
 - **Python**: 3.8 or higher
-- **Audio System**: PulseAudio or PipeWire
-- **Memory**: 2GB RAM (4GB recommended)
-- **Microphone**: Working audio input device
+- **Memory**: 4GB RAM (8GB recommended)
+- **Storage**: 2GB free space
 
-### Installation
+## 🛠️ Installation
+
+### Automatic Installation
 
 ```bash
 # Clone the repository
 git clone https://github.com/your-username/voice-control.git
 cd voice-control
 
-# Run the installation script
+# Run the installer
 ./install.sh
 
-# Verify installation
-python3 verify_installation.py
+# Start the system tray
+./voice_control_tray.py
 ```
 
-### First Run
+### Manual Installation
+
+<details>
+<summary>Click to expand manual installation steps</summary>
+
+#### 1. Install System Dependencies
 
 ```bash
-# Start voice control
-voice-control
-
-# Or run as a background service
-voice-control --daemon
-
-# Check service status
-voice-control --service status
+sudo apt update
+sudo apt install -y \
+    python3-venv python3-dev python3-pip \
+    portaudio19-dev libasound2-dev libpulse-dev \
+    build-essential pkg-config libcairo2-dev \
+    libgirepository1.0-dev gir1.2-gtk-3.0 \
+    libgtk-3-dev python3-gi python3-gi-cairo \
+    gir1.2-ayatanaappindicator3-0.1 \
+    wtype xdotool wl-clipboard libnotify-bin
 ```
 
-## 📖 Documentation
-
-### User Guides
-- [Installation Guide](docs/installation.md) - Detailed installation instructions
-- [Configuration Guide](docs/configuration.md) - Customization options
-- [Troubleshooting Guide](docs/troubleshooting.md) - Common issues and solutions
-
-### Developer Resources
-- [Contributing Guide](docs/contributing.md) - How to contribute to the project
-- [Architecture Overview](docs/architecture.md) - Technical implementation details
-
-## 🛠️ Usage
-
-### Basic Commands
+#### 2. Setup Python Environment
 
 ```bash
-# Service Management
-voice-control --service install    # Install systemd user service
-voice-control --service start      # Start the service
-voice-control --service stop       # Stop the service
-voice-control --service status     # Check service status
-
-# Running Modes
-voice-control                      # Interactive mode
-voice-control --daemon            # Background daemon mode
-voice-control --log-level DEBUG   # Debug mode with verbose logging
+python3 -m venv .venv --system-site-packages
+source .venv/bin/activate
+pip install -r requirements.txt
 ```
 
-### System Integration
+#### 3. Make Scripts Executable
 
 ```bash
-# Enable auto-start on login
-systemctl --user enable voice-control
+chmod +x voice_control_tray.py
+chmod +x voice_whisper.py
+chmod +x install.sh
+```
 
-# Start/stop service manually
-systemctl --user start voice-control
-systemctl --user stop voice-control
+</details>
 
-# View service logs
-journalctl --user -u voice-control -f
+## 🎛️ Usage
+
+### System Tray Features
+
+- **🎙️ Quick Record (5s)** - Single voice recording
+- **🎧 Continuous Listening** - Real-time voice streaming
+- **🤖 AI Agent Services** - Access to voice control engine
+- **🛡️ Error Handler Status** - System health monitoring
+- **🔧 System Diagnostics** - Troubleshooting tools
+- **⚙️ Settings** - Configuration options
+- **🚪 Exit** - Clean shutdown
+
+### Keyboard Shortcuts
+
+| Shortcut | Action |
+|----------|--------|
+| `Ctrl+Alt+V` | Quick voice record (5 seconds) |
+| `Ctrl+Alt+L` | Toggle continuous listening |
+
+### Command Line Usage
+
+```bash
+# Single recording
+./voice_whisper.py --duration 5
+
+# Continuous mode
+./voice_whisper.py --continuous
+
+# Different model sizes
+./voice_whisper.py --model small    # Better accuracy
+./voice_whisper.py --model tiny     # Faster processing
+
+# Test audio devices
+./voice_whisper.py --test-audio
 ```
 
 ## 🔧 Configuration
 
-Voice Control can be customized through configuration files:
+### Audio Settings
 
-- **User Config**: `~/.config/voice-control/voice-control.py`
-- **System Config**: `/etc/voice-control/` (optional)
+The system auto-detects your audio devices. To manually configure:
 
-Example configuration:
+```bash
+# List available audio devices
+./voice_whisper.py --test-audio
+
+# Test microphone
+arecord -l
+arecord -D default -f cd -t wav -d 5 test.wav
+aplay test.wav
+```
+
+### Language Settings
 
 ```python
-# ~/.config/voice-control/voice-control.py
-def voice_control_process(text):
-    """Process recognized speech text"""
-    # Convert to uppercase for emphasis
-    if text.startswith("shout"):
-        return text.upper()
-    
-    # Add punctuation if missing
-    if not text.endswith(('.', '!', '?')):
-        text += '.'
-    
-    return text
-```
-
-## 🧪 Testing
-
-```bash
-# Run all tests
-python3 -m pytest tests/
-
-# Test specific components
-python3 -m pytest tests/test_core.py
-python3 -m pytest tests/test_speech.py
-
-# Run with coverage
-python3 -m pytest tests/ --cov=voice_control
-```
-
-## 🤝 Contributing
-
-We welcome contributions! Please see our [Contributing Guide](docs/contributing.md) for details.
-
-### Quick Contribution Steps
-
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature-name`
-3. Make your changes and add tests
-4. Run tests: `python3 -m pytest`
-5. Submit a pull request
-
-### Development Setup
-
-```bash
-# Clone your fork
-git clone https://github.com/your-username/voice-control.git
-cd voice-control
-
-# Create development environment
-python3 -m venv .venv
-source .venv/bin/activate
-
-# Install development dependencies
-pip install -r requirements.txt
-pip install -e .
-
-# Run tests
-python3 -m pytest
+# In voice_whisper.py, modify the transcribe call:
+result = self.model.transcribe(audio_file, language="en")  # English
+result = self.model.transcribe(audio_file, language="es")  # Spanish
+result = self.model.transcribe(audio_file, language="fr")  # French
+# Or leave as None for auto-detection
 ```
 
 ## 🐛 Troubleshooting
 
 ### Common Issues
 
-**Installation fails with permission errors:**
+**No Audio Detected**
 ```bash
-# Make sure you're not using sudo
-./install.sh  # NOT: sudo ./install.sh
-```
-
-**Audio not working:**
-```bash
-# Check audio system
-pactl info  # For PulseAudio
-pipewire --version  # For PipeWire
+# Check audio devices
+./voice_whisper.py --test-audio
 
 # Test microphone
-arecord -d 5 test.wav && aplay test.wav
+arecord -D default -f cd -t wav -d 5 test.wav && aplay test.wav
 ```
 
-**Service won't start:**
+**Text Not Typing**
+- Ensure `wtype` and `xdotool` are installed
+- Check if you're using Wayland or X11
+- Try the clipboard fallback (text gets copied, press Ctrl+V)
+
+**System Tray Not Appearing**
 ```bash
-# Check service status
-systemctl --user status voice-control
+# Install AppIndicator support
+sudo apt install gir1.2-ayatanaappindicator3-0.1
 
-# View detailed logs
-journalctl --user -u voice-control -n 50
+# Restart GNOME Shell
+Alt+F2, type 'r', press Enter
 ```
 
-For more troubleshooting help, see our [Troubleshooting Guide](docs/troubleshooting.md).
+**Model Loading Issues**
+```bash
+# Try smaller model
+./voice_whisper.py --model tiny
 
-## 📊 System Requirements
+# Check available disk space
+df -h
+```
 
-### Minimum Requirements
-- **OS**: Linux with systemd (most modern distributions)
-- **Python**: 3.8+
-- **RAM**: 2GB
-- **Storage**: 500MB free space
-- **Audio**: Working microphone and audio system
+### Diagnostic Tools
 
-### Recommended Requirements
-- **RAM**: 4GB or more
-- **CPU**: Multi-core processor
-- **Audio**: High-quality microphone for better recognition
+```bash
+# Run system diagnostics
+python3 test_error_handler.py
 
-### Tested Distributions
-- Ubuntu 20.04, 22.04, 24.04
-- Debian 11, 12
-- Fedora 35, 36, 37, 38
-- Arch Linux (current)
-- openSUSE Leap 15.4+
+# Check error logs
+journalctl --user -f
 
-## 🔒 Privacy & Security
+# Test clipboard functionality
+python3 test_clipboard.py
+```
 
-- **Local Processing**: All speech recognition happens on your device
-- **No Network Transmission**: Your voice data never leaves your computer
-- **User-Space Operation**: Runs without root privileges
-- **Secure Storage**: Configuration and data stored with appropriate permissions
-- **Open Source**: Full source code available for audit
+## 🏗️ Architecture
+
+```
+voice-control/
+├── voice_control_tray.py      # System tray application
+├── voice_whisper.py           # Core voice recognition
+├── voice_control/             # Core modules
+│   ├── core/                  # Error handling, resource management
+│   ├── gui/                   # System tray, notifications
+│   └── system/                # Service management, input handling
+├── install.sh                 # Automated installer
+├── requirements.txt           # Python dependencies
+└── docs/                      # Documentation
+```
+
+## 🤝 Contributing
+
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
+
+### Development Setup
+
+```bash
+git clone https://github.com/your-username/voice-control.git
+cd voice-control
+./install.sh
+source .venv/bin/activate
+
+# Run tests
+python -m pytest tests/
+
+# Code formatting
+black voice_control/
+flake8 voice_control/
+```
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-**You are free to:**
-- Use this software for any purpose
-- Modify and distribute the software
-- Use it in commercial projects
-- Create proprietary versions
+This project is licensed under the GPL-2.0 License - see the [LICENSE](LICENSE) file for details.
 
 ## 🙏 Acknowledgments
 
-This project builds upon the work of many open source contributors and projects:
-
-- The Linux desktop community for creating accessible computing environments
-- Audio processing libraries that make real-time speech processing possible
-- The Python ecosystem for providing excellent development tools
+- [OpenAI Whisper](https://github.com/openai/whisper) - Speech recognition engine
+- [GNOME Project](https://www.gnome.org/) - Desktop environment
+- [Debian Project](https://www.debian.org/) - Operating system
 
 ## 📞 Support
 
-- **Documentation**: Check our [docs/](docs/) directory
-- **Issues**: Report bugs and request features on [GitHub Issues](https://github.com/your-username/voice-control/issues)
-- **Discussions**: Join conversations on [GitHub Discussions](https://github.com/your-username/voice-control/discussions)
-
-## 🚀 Roadmap
-
-### Current Status
-- ✅ Core application architecture
-- ✅ System integration and service management
-- ✅ GUI components and system tray
-- ✅ Error handling and stability fixes
-- 🔄 Speech recognition backend implementation (in progress)
-
-### Upcoming Features
-- 🎯 Proven speech recognition integration
-- 🌍 Multi-language support
-- 🔌 Plugin system for extensibility
-- 📱 Mobile companion app
-- 🤖 Advanced voice command processing
+- 🐛 **Bug Reports**: [GitHub Issues](https://github.com/your-username/voice-control/issues)
+- 💬 **Discussions**: [GitHub Discussions](https://github.com/your-username/voice-control/discussions)
+- 📖 **Documentation**: [Wiki](https://github.com/your-username/voice-control/wiki)
 
 ---
 
 **Made with ❤️ for the Linux community**
 
-If you find this project useful, please consider starring the repository and sharing it with others!
+*Transform your voice into text with the power of AI - completely offline and privacy-focused.*

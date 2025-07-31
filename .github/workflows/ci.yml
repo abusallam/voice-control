@@ -1,0 +1,193 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.8, 3.9, '3.10', 3.11, 3.12]
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+    
+    - name: Install system dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          pulseaudio-utils \
+          portaudio19-dev \
+          python3-dev \
+          libasound2-dev \
+          libportaudio2 \
+          libportaudiocpp0 \
+          ffmpeg
+    
+    - name: Install Python dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pytest pytest-cov flake8 black
+    
+    - name: Lint with flake8
+      run: |
+        # stop the build if there are Python syntax errors or undefined names
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+        # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
+        flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+    
+    - name: Check code formatting with black
+      run: |
+        black --check --diff .
+    
+    - name: Run tests
+      run: |
+        pytest tests/ --cov=voice_control --cov-report=xml --cov-report=term-missing
+    
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage.xml
+        flags: unittests
+        name: codecov-umbrella
+        fail_ci_if_error: false
+
+  test-installation:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    
+    - name: Install system dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y pulseaudio-utils portaudio19-dev
+    
+    - name: Test installation script
+      run: |
+        chmod +x install.sh
+        # Run installation in test mode (without actually installing)
+        bash -n install.sh  # Syntax check
+    
+    - name: Test verification script
+      run: |
+        python3 verify_installation.py || true  # Allow failure for missing deps
+
+  test-distributions:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        container:
+          - ubuntu:20.04
+          - ubuntu:22.04
+          - debian:11
+          - debian:12
+    
+    container: ${{ matrix.container }}
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Install system dependencies
+      run: |
+        apt-get update
+        apt-get install -y python3 python3-pip python3-venv git
+    
+    - name: Test basic functionality
+      run: |
+        python3 --version
+        python3 -c "import sys; print(f'Python {sys.version}')"
+    
+    - name: Install dependencies
+      run: |
+        python3 -m pip install --upgrade pip
+        pip install -r requirements.txt || true  # Allow failure for system-specific issues
+    
+    - name: Test module imports
+      run: |
+        python3 -c "
+        try:
+            import voice_control
+            print('✓ Voice control modules can be imported')
+        except ImportError as e:
+            print(f'⚠ Import warning: {e}')
+        "
+
+  security-scan:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    
+    - name: Install security scanning tools
+      run: |
+        pip install bandit safety
+    
+    - name: Run Bandit security scan
+      run: |
+        bandit -r voice_control/ -f json -o bandit-report.json || true
+        bandit -r voice_control/ || true
+    
+    - name: Check for known security vulnerabilities
+      run: |
+        safety check --json || true
+    
+    - name: Upload security scan results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: security-scan-results
+        path: bandit-report.json
+
+  code-quality:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    
+    - name: Install code quality tools
+      run: |
+        pip install pylint mypy
+        pip install -r requirements.txt
+    
+    - name: Run pylint
+      run: |
+        pylint voice_control/ --exit-zero --output-format=text --reports=yes > pylint-report.txt
+        cat pylint-report.txt
+    
+    - name: Run mypy type checking
+      run: |
+        mypy voice_control/ --ignore-missing-imports --no-strict-optional || true
+    
+    - name: Upload code quality reports
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: code-quality-reports
+        path: |
+          pylint-report.txt

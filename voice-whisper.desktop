@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=VoiceWhisper
+Comment=Voice to Text for Linux - Debian 12 GNOME/Wayland
+Exec=/home/asim/Documents/voice-control/launch_voice_whisper.sh
+Icon=audio-input-microphone
+Terminal=false
+Categories=Utility;Audio;
+Keywords=voice;speech;transcription;whisper;dictation;
+StartupNotify=true

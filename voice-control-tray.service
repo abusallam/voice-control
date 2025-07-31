@@ -1,0 +1,38 @@
+[Unit]
+Description=Voice Control System Tray
+Documentation=https://github.com/voice-control/voice-control
+After=graphical-session.target
+Wants=graphical-session.target
+PartOf=graphical-session.target
+
+[Service]
+Type=simple
+ExecStart=/home/asim/Documents/voice-control/voice_control_tray.py
+Restart=on-failure
+RestartSec=5
+StartLimitInterval=60
+StartLimitBurst=3
+
+# Environment variables
+Environment=DISPLAY=:0
+Environment=HOME=/home/asim
+Environment=XDG_RUNTIME_DIR=/run/user/1000
+Environment=WAYLAND_DISPLAY=wayland-0
+Environment=PATH=/home/asim/Documents/voice-control/.venv/bin:/usr/local/bin:/usr/bin:/bin
+
+# Working directory
+WorkingDirectory=/home/asim/Documents/voice-control
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=read-only
+ReadWritePaths=/home/asim/.config /home/asim/.local/share /home/asim/.cache
+
+# Resource limits
+MemoryMax=2G
+CPUQuota=50%
+
+[Install]
+WantedBy=graphical-session.target
